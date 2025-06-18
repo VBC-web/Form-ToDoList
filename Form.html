@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productivity Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #9ca3af;
+            font-weight: 300;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .card h2 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #8b5cf6;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: #9ca3af;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* Contact Form Styles */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #64748b;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .form-group.error input,
+        .form-group.error textarea {
+            border-color: #ef4444;
+        }
+
+        .error-message {
+            color: #ef4444;
+            font-size: 0.9rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        .char-count {
+            text-align: right;
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* To-Do List Styles */
+        .task-input-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .task-input {
+            flex: 1;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 2px solid rgba(139, 92, 246, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .task-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+
+        .add-btn {
+            padding: 16px 20px;
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 60px;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 25px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            padding: 4px;
+        }
+
+        .filter-tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            color: #9ca3af;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+            color: white;
+        }
+
+        .tasks-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+
+        .task-item:hover {
+            background: rgba(15, 23, 42, 0.8);
+            transform: translateX(5px);
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid #8b5cf6;
+            background: transparent;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .task-checkbox.completed {
+            background: #8b5cf6;
+        }
+
+        .task-checkbox.completed::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .task-text {
+            flex: 1;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .task-text.completed {
+            text-decoration: line-through;
+            color: #64748b;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background: rgba(59, 130, 246, 0.2);
+            color: #60a5fa;
+        }
+
+        .edit-btn:hover {
+            background: rgba(59, 130, 246, 0.3);
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+            padding: 40px 20px;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(34, 197, 94, 0.2);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #4ade80;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .card {
+                padding: 25px;
+            }
+
+            .task-input-container {
+                flex-direction: column;
+            }
+
+            .add-btn {
+                min-width: auto;
+            }
+        }
+
+        /* Custom Scrollbar */
+        .tasks-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tasks-container::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.4);
+            border-radius: 3px;
+        }
+
+        .tasks-container::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.6);
+            border-radius: 3px;
+        }
+
+        .tasks-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(139, 92, 246, 0.8);
+        }
+    footer {
+        text-align: center;
+      margin-top: 4rem;
+      color: #08e622;
+      font-size: 0.95rem;
+      opacity: 0.7;
+      position: relative;
+      z-index: 2;
+    }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Productivity Hub</h1>
+            <p>Your all-in-one contact and task manager.</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Contact Form Section -->
+            <div class="card">
+                <h2>Get in Touch</h2>
+                <p>Let's build something great together.</p>
+                
+                <div class="success-message" id="successMessage">
+                    Message sent successfully! We'll get back to you soon.
+                </div>
+
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Your Name" required>
+                        <div class="error-message">Name is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Your Email" required>
+                        <div class="error-message">Email is required.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea id="message" rows="6" placeholder="Your Message" maxlength="500" required></textarea>
+                        <div class="char-count"><span id="charCount">0</span> / 500</div>
+                        <div class="error-message">Message is required.</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+            </div>
+
+            <!-- To-Do List Section -->
+            <div class="card">
+                <h2>My Tasks</h2>
+                <p>Stay organized and productive.</p>
+
+                <div class="task-input-container">
+                    <input type="text" class="task-input" id="taskInput" placeholder="Add a new task..." maxlength="100">
+                    <button class="add-btn" id="addTaskBtn">+</button>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All</button>
+                    <button class="filter-tab" data-filter="pending">Pending</button>
+                    <button class="filter-tab" data-filter="completed">Completed</button>
+                </div>
+
+                <div class="tasks-container" id="tasksContainer">
+                    <div class="empty-state">No tasks yet. Add one above!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+  <footer>
+    <p>Created by Vikas Choudhary • Productivity Hub • June 2025</p>
+  </footer>
+
+    <script>
+        // Contact Form Functionality
+        class ContactForm {
+            constructor() {
+                this.form = document.getElementById('contactForm');
+                this.nameInput = document.getElementById('name');
+                this.emailInput = document.getElementById('email');
+                this.messageInput = document.getElementById('message');
+                this.charCount = document.getElementById('charCount');
+                this.successMessage = document.getElementById('successMessage');
+                
+                this.initEventListeners();
+            }
+
+            initEventListeners() {
+                this.form.addEventListener('submit', this.handleSubmit.bind(this));
+                this.messageInput.addEventListener('input', this.updateCharCount.bind(this));
+                
+                // Real-time validation
+                [this.nameInput, this.emailInput, this.messageInput].forEach(input => {
+                    input.addEventListener('blur', () => this.validateField(input));
+                    input.addEventListener('input', () => this.clearError(input));
+                });
+            }
+
+            updateCharCount() {
+                const length = this.messageInput.value.length;
+                this.charCount.textContent = length;
+            }
+
+            validateField(field) {
+                const formGroup = field.parentElement;
+                let isValid = true;
+
+                if (field.type === 'email') {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    isValid = field.value.trim() !== '' && emailRegex.test(field.value);
+                } else {
+                    isValid = field.value.trim() !== '';
+                }
+
+                if (!isValid) {
+                    formGroup.classList.add('error');
+                } else {
+                    formGroup.classList.remove('error');
+                }
+
+                return isValid;
+            }
+
+            clearError(field) {
+                field.parentElement.classList.remove('error');
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                
+                const isNameValid = this.validateField(this.nameInput);
+                const isEmailValid = this.validateField(this.emailInput);
+                const isMessageValid = this.validateField(this.messageInput);
+
+                if (isNameValid && isEmailValid && isMessageValid) {
+                    // Simulate form submission
+                    this.showSuccess();
+                    this.form.reset();
+                    this.charCount.textContent = '0';
+                }
+            }
+
+            showSuccess() {
+                this.successMessage.style.display = 'block';
+                setTimeout(() => {
+                    this.successMessage.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // To-Do List Functionality
+        class TodoList {
+            constructor() {
+                this.tasks = [];
+                this.currentFilter = 'all';
+                this.taskInput = document.getElementById('taskInput');
+                this.addBtn = document.getElementById('addTaskBtn');
+                this.tasksContainer = document.getElementById('tasksContainer');
+                this.filterTabs = document.querySelectorAll('.filter-tab');
+                
+                this.initEventListeners();
+            }
+
+            initEventListeners() {
+                this.addBtn.addEventListener('click', this.addTask.bind(this));
+                this.taskInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.addTask();
+                });
+
+                this.filterTabs.forEach(tab => {
+                    tab.addEventListener('click', (e) => {
+                        this.setFilter(e.target.dataset.filter);
+                    });
+                });
+            }
+
+            addTask() {
+                const text = this.taskInput.value.trim();
+                if (!text) return;
+
+                const task = {
+                    id: Date.now(),
+                    text: text,
+                    completed: false,
+                    createdAt: new Date()
+                };
+
+                this.tasks.push(task);
+                this.taskInput.value = '';
+                this.renderTasks();
+            }
+
+            toggleTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.renderTasks();
+                }
+            }
+
+            deleteTask(id) {
+                this.tasks = this.tasks.filter(t => t.id !== id);
+                this.renderTasks();
+            }
+
+            editTask(id) {
+                const task = this.tasks.find(t => t.id === id);
+                if (!task) return;
+
+                const newText = prompt('Edit task:', task.text);
+                if (newText && newText.trim()) {
+                    task.text = newText.trim();
+                    this.renderTasks();
+                }
+            }
+
+            setFilter(filter) {
+                this.currentFilter = filter;
+                
+                this.filterTabs.forEach(tab => {
+                    tab.classList.toggle('active', tab.dataset.filter === filter);
+                });
+                
+                this.renderTasks();
+            }
+
+            getFilteredTasks() {
+                switch (this.currentFilter) {
+                    case 'pending':
+                        return this.tasks.filter(task => !task.completed);
+                    case 'completed':
+                        return this.tasks.filter(task => task.completed);
+                    default:
+                        return this.tasks;
+                }
+            }
+
+            renderTasks() {
+                const filteredTasks = this.getFilteredTasks();
+
+                if (filteredTasks.length === 0) {
+                    this.tasksContainer.innerHTML = `
+                        <div class="empty-state">
+                            ${this.currentFilter === 'all' ? 'No tasks yet. Add one above!' : 
+                              this.currentFilter === 'pending' ? 'No pending tasks!' : 'No completed tasks!'}
+                        </div>
+                    `;
+                    return;
+                }
+
+                this.tasksContainer.innerHTML = filteredTasks.map(task => `
+                    <div class="task-item">
+                        <div class="task-checkbox ${task.completed ? 'completed' : ''}" 
+                             onclick="todoApp.toggleTask(${task.id})"></div>
+                        <div class="task-text ${task.completed ? 'completed' : ''}">${task.text}</div>
+                        <div class="task-actions">
+                            <button class="edit-btn" onclick="todoApp.editTask(${task.id})">✏️</button>
+                            <button class="delete-btn" onclick="todoApp.deleteTask(${task.id})">🗑️</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Initialize Applications
+        const contactForm = new ContactForm();
+        const todoApp = new TodoList();
+
+        // Add some sample tasks for demonstration
+        setTimeout(() => {
+            todoApp.tasks = [
+                { id: 1, text: 'Complete the productivity hub project', completed: true, createdAt: new Date() },
+                { id: 2, text: 'Learn advanced JavaScript concepts', completed: false, createdAt: new Date() },
+                { id: 3, text: 'Practice CSS Grid and Flexbox', completed: false, createdAt: new Date() }
+            ];
+            todoApp.renderTasks();
+        }, 100);
+    </script>
+</body>
+</html>
