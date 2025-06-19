@@ -73,13 +73,13 @@ Productivity Hub is a sleek, modern single-page application that combines a prof
 ## 📁 Project Structure
 
 ```
-productivity-hub/
+productivity-hub/ 
 │
 ├── index.html          # Main HTML file with embedded CSS and JS
 ├── README.md           # Project documentation
-└── assets/             # (Optional) Screenshots and assets
-    └── screenshot.png
+
 ```
+
 
 ## 🎯 Key Learning Objectives
 
